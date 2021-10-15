@@ -6,7 +6,7 @@ COPY ./Cargo.toml /app/
 COPY ./src/ /app/src/
 
 RUN cargo build --release && \
-  mv ./target/release/segfaulter /usr/local/bin
+  mv ./target/release/example-crashing-rust-app /usr/local/bin
 
 FROM alpine:3.14
 

@@ -1,6 +1,6 @@
 # Example of a Crashing App in Rust
 
-This repository is a how-to guide on how to debug a crashing app using lldb and core-dump-handler.
+This repository is a how-to guide on debugging a crashing app using lldb and core-dump-handler.
 
 ## Prerequisites
 This example assumes you have installed the [core-dump-handler](https://github.com/IBM/core-dump-handler/#installing-the-chart) into your kubernetes cluster.

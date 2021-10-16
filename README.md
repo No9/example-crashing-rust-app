@@ -25,7 +25,7 @@ panic = "abort"
 
 The `debug = true` line adds the `-g` flag to the build so the exe will contain symbols to assist with debugging.
 
-While `panic = "abort"` enables panics to generate core dumps so not only can we catch system errors but application logic as well.
+While `panic = "abort"` enables panics to generate core dumps so not only will it catch system errors but we can also raise them from application logic as well.
 
 
 Log into your kubernetes cluster and run the prebuilt image in a pod on the server.

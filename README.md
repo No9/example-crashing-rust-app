@@ -8,7 +8,21 @@ This example assumes you have installed the [core-dump-handler](https://github.c
 Install the `cdcli` client on your machine. 
 Download the latest build from releases https://github.com/IBM/core-dump-handler/releases page.Extract the `cdcli` from the zip folder and place it in a folder that is in your `$PATH`.
 
-## Creating a crashing pod
+## Creating a core dump
+To start with you need to generate a core dump. The code in the example-crashing-rust-app project takes care of that. 
+example-crashing-rust-app is a normal Rust project with the following release build configuration in the [Cargo.toml](https://github.com/No9/example-crashing-rust-app/blob/main/Cargo.toml#L8). 
+
+```
+[profile.release]
+debug = true
+panic = "abort"
+```
+
+The `debug = true` line adds the `-g` flag to the build so the exe will contain symbols to assist with debugging.
+
+While `panic = "abort"` enables panics to generate core dumps so not only can we catch system errors but application logic as well.
+
+
 Log into your kubernetes cluster and run the prebuilt image in a pod on the server.
 This will fail automatically and cause a core dump to be created.
 ```
@@ -29,7 +43,7 @@ Each item in the name breaks down as
 
 ## Start Debugging
 Now run the cdcli command to start a debugging session. 
-As the name of the exe is longer thaN the OS allows you also need to supply the full name of the exe with the `-e` parameter.
+As the name of the exe is longer than the OS allows you also need to supply the full name of the exe with the `-e` parameter.
 
 An example would be
 ```
@@ -171,7 +185,7 @@ Both of these commands will show us the value of the `text` variable before it w
 
 ## Integrating the source code
 That's great if the code is small and easy to follow but what about more complex scenarios?
-If you have access to the code you can configure the debugger to us it and print out the code when you select the frame.
+If you have access to the code you can configure the debugger to use it and print out the code when you select the frame.
 
 Exit the debugger by typing quit
 

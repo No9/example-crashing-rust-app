@@ -9,7 +9,12 @@ Install the `cdcli` client on your machine.
 Download the latest build from releases https://github.com/IBM/core-dump-handler/releases page.Extract the `cdcli` from the zip folder and place it in a folder that is in your `$PATH`.
 
 ## Creating a core dump
-To start with you need to generate a core dump. The code in the example-crashing-rust-app project takes care of that. 
+To start with you need to generate a core dump. The code in the [example-crashing-rust-app](https://github.com/No9/example-crashing-rust-app/) project takes care of that.
+
+The [project code](https://github.com/No9/example-crashing-rust-app/blob/main/src/main.rs) has three nested calls inside a main function with the final call creating an explicit [`panic!`](https://github.com/No9/example-crashing-rust-app/blob/main/src/main.rs#L17). 
+
+Just enough for you to see how the call stack lays out for an application and do some investigation around that.
+
 example-crashing-rust-app is a normal Rust project with the following release build configuration in the [Cargo.toml](https://github.com/No9/example-crashing-rust-app/blob/main/Cargo.toml#L8). 
 
 ```
@@ -31,6 +36,7 @@ kubectl run -i -t crasher --image=quay.io/icdh/example-crashing-rust-app --resta
 
 ## Locate the image
 Now look in your object storage and find the name of the zip file that was created.
+
 e.g. d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11.zip  
 
 Each item in the name breaks down as
@@ -104,8 +110,12 @@ You can now start a debug session by simply running the `rundebug.sh` script.
 ```
 You will see the command that is ran and be given the lldb command prompt with the core and the exe preloaded.
 ```
-(lldb) target create "/shared/example-crashing-rust-app" --core "d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11/d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11.core"
-Core file '/debug/d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11/d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11.core' (x86_64) was loaded.
+(lldb) target create "/shared/example-crashing-rust-app" --core
+"d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11/
+d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11.core"
+Core file '/debug/d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11/
+d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11.core' 
+(x86_64) was loaded.
 (lldb)
 ```
 
@@ -149,7 +159,9 @@ frame select 8
 ```
 The output of either command will be 
 ```
-frame #8: 0x00007f29d6a33c88 example-crashing-rust-app`example_crashing_rust_app::bar::h48db1e5d2e4e6220(input=(data_ptr = "hello world\xd6)\U0000007f", length = 11)) at main.rs:17:5
+frame #8: 0x00007f29d6a33c88 example-crashing-rust-app`example_crashing_rust_app::bar
+::h48db1e5d2e4e6220(input=(data_ptr = "hello world\xd6)\U0000007f", length = 11)) 
+at main.rs:17:5
 ```
 The output represents the currently selected frame and also shows the values passed.
 In this case the value was `input=(data_ptr = "hello world\xd6)\U0000007f", length = 11)`
@@ -174,7 +186,8 @@ Both of these commands will show us the value of the `text` variable before it w
 (alloc::string::String) text = {
   vec = {
     buf = {
-      ptr = (pointer = "hello world\xd6)\U0000007f", _marker = core::marker::PhantomData<unsigned char> @ 0x00007ffd76719e00)
+      ptr = (pointer = "hello world\xd6)\U0000007f", _marker = 
+        core::marker::PhantomData<unsigned char> @ 0x00007ffd76719e00)
       cap = 12
       alloc = {}
     }
@@ -215,7 +228,8 @@ f 10
 ```
 Returns
 ```
-frame #10: 0x00007f29d6a33bf9 example-crashing-rust-app`example_crashing_rust_app::do_test::ha134fca868990e15 at main.rs:7:5
+frame #10: 0x00007f29d6a33bf9 example-crashing-rust-app`example_crashing_rust_app::do_test::
+   ha134fca868990e15 at main.rs:7:5
    4   	
    5   	pub fn do_test() -> Result<(), Box<dyn std::error::Error>> {
    6   	    let text = format!("hello {}", "world"); 

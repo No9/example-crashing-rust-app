@@ -60,11 +60,6 @@ Where the `-c` option is the core zip file in the bucket.
 The original image is referenced with the `-i` option.
 As the name of the exe is longer than the OS allows you also need to supply the full name of the exe with the `-e` parameter.
 
-An example would be
-```
-cdcli -c d19ef2ef-35d3-4224-8293-f4f9509868f8-dump-1634327833-crasher-example-crashin-1-11.zip -i quay.io/icdh/example-crashing-rust-app -e example-crashing-rust-app  
-```
-
 A full list of config options can be seen by running 
 ```
 cdcli --help
